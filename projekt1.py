@@ -151,7 +151,7 @@ There are {wordsLowercase} lowercase words.
 There are {numbersCount} numeric strings.
 The sum of all the numbers {numbersSum}""")
 print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
-print(f"LEN|{'OCCURENCES':^{maxFreq + 2}}|NR.")
+print(f"LEN|{'OCCURENCES':^{maxFreq}}  |NR.")
 print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
 for length, freq in enumerate(wordFormLengthsFreqs):
   freqStars = "*" * freq
