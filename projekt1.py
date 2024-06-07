@@ -1,5 +1,5 @@
 """
-projekt1.py: první projekt do Engeto Online Python Akademie 🤩
+projekt1.py: první projekt do Engeto Online Python Akademie
 
 author: Vasyl Burov
 email: vasylburov@gmail.com
@@ -10,7 +10,6 @@ import sys
 
 # Function to terminate program
 def terminateProgram(errorMessage):
-  print(errorMessage)
   sys.exit(errorMessage)
 
 # Valid credentials
@@ -21,8 +20,12 @@ userCredentials = {
     "mike": "password123"
 }
 
-# Create divider
-diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider = "-" * 40
+# Titlecase exceptions (common countries abbreviations)
+titlecaseExceptions = {
+    "US", "UK", "FR", "DE", "JP", "IN", "BR", "CN", "CA", "AU", "RU", "IT", 
+    "ES", "KR", "MX", "ZA", "USA", "GBR", "FRA", "DEU", "JPN", "IND", "BRA", 
+    "CHN", "CAN", "AUS", "RUS", "ITA", "ESP", "KOR", "MEX", "ZAF", "UAE", "EU"
+}
 
 # Prompt user for username and password
 userName = input("username: ")
@@ -36,7 +39,7 @@ except:
 
 # Check user credentials
 if userCredentials[userName] == userPassword:
-  print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
+  print("----------------------------------------")
   print(f"Welcome to the app, {userName}!")
 else:
   terminateProgram("unregistered user, terminating the program..")
@@ -69,14 +72,20 @@ other freshwater genera and herring similar to those
 in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.'''
 ]
-textCount = len(TEXTS) # Count texts
+textCount = len(TEXTS) # How many texts
 
 # Prompt user to select text
 print(f"We have {textCount} texts to be analyzed.")
-print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
+print("----------------------------------------")
 textChoice = input("Enter a number btw. 1 and " + str(textCount) + " to select: ")
 
-# Check user input
+# Check user input for exceptions
+try:
+  int(textChoice) in range(1, textCount + 1)
+except:
+  terminateProgram("invalid choice, terminating the program..")
+
+# Check if selected text exists
 if int(textChoice) not in range(1, textCount + 1):
   terminateProgram("invalid choice, terminating the program..")
 
@@ -112,7 +121,7 @@ for wordForm in wordForms:
   if wordForm.isalpha():
 
     # title case
-    if wordForm.istitle():
+    if wordForm.istitle() or (wordForm in titlecaseExceptions): # US is titlecase
       wordsTitlecase += 1
 
     # upper case
@@ -143,16 +152,16 @@ for length in range(1, int(max(wordFormLengths))+1):
 maxFreq = max(wordFormLengthsFreqs)
 
 # Print the results
-print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
+print("----------------------------------------")
 print(f"""There are {len(wordForms)} words in the selected text.
 There are {wordsTitlecase} titlecase words.
 There are {wordsUppercase} uppercase words.
 There are {wordsLowercase} lowercase words.
 There are {numbersCount} numeric strings.
 The sum of all the numbers {numbersSum}""")
-print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
+print("----------------------------------------")
 print(f"LEN|{'OCCURENCES':^{maxFreq}}  |NR.")
-print(diviiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiider)
+print("----------------------------------------")
 for length, freq in enumerate(wordFormLengthsFreqs):
   freqStars = "*" * freq
   print(f"{length + 1:>3}|{freqStars:<{maxFreq}}  |{freq}")
