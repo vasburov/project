@@ -1,5 +1,5 @@
 """
-projekt1.py: první projekt do Engeto Online Python Akademie
+projekt1.py: Textový analyzátor
 
 author: Vasyl Burov
 email: vasylburov@gmail.com
@@ -8,44 +8,35 @@ discord: vasylburov
 
 import sys
 
-# Function to terminate program
+# Function to terminate the program
 def terminateProgram(errorMessage):
   sys.exit(errorMessage)
 
-# Valid credentials
-userCredentials = {
+# Valid user credentials
+users = {
     "ann": "pass123",
     "bob": "123",
     "liz": "pass123",
     "mike": "password123"
 }
 
-# Titlecase exceptions (common countries abbreviations)
-titlecaseExceptions = {
-    "US", "UK", "FR", "DE", "JP", "IN", "BR", "CN", "CA", "AU", "RU", "IT", 
-    "ES", "KR", "MX", "ZA", "USA", "GBR", "FRA", "DEU", "JPN", "IND", "BRA", 
-    "CHN", "CAN", "AUS", "RUS", "ITA", "ESP", "KOR", "MEX", "ZAF", "UAE", "EU"
-}
-
 # Prompt user for username and password
-userName = input("username: ")
-userPassword = input("password: ")
+userName = input("username:")
+userPassword = input("password:")
 
-# Check user input for exceptions
-try:
-  userCredentials[userName]
+try: # Check the user input for exceptions
+  users[userName]
 except:
   terminateProgram("unregistered user, terminating the program..")
 
-# Check user credentials
-if userCredentials[userName] == userPassword:
+if users[userName] == userPassword: # Check the user credentials
   print("----------------------------------------")
   print(f"Welcome to the app, {userName}!")
 else:
   terminateProgram("unregistered user, terminating the program..")
 
-# Load texts
-TEXTS = ['''
+# Load the texts to analyse
+texts = ['''
 Situated about 10 miles west of Kemmerer,
 Fossil Butte is a ruggedly impressive
 topographic feature that rises sharply
@@ -72,96 +63,65 @@ other freshwater genera and herring similar to those
 in modern oceans. Other fish such as paddlefish,
 garpike and stingray are also present.'''
 ]
-textCount = len(TEXTS) # How many texts
 
-# Prompt user to select text
-print(f"We have {textCount} texts to be analyzed.")
+# Prompt the user for a text number selection
+print(f"We have {len(texts)} texts to be analyzed.")
 print("----------------------------------------")
-textChoice = input("Enter a number btw. 1 and " + str(textCount) + " to select: ")
+textChoicePrompt = "Enter a number btw. 1 and " + str(len(texts)) + " to select: "
+textChoice = input(textChoicePrompt)
 
-# Check user input for exceptions
-try:
-  int(textChoice) in range(1, textCount + 1)
+try: # Check the user input for exceptions
+  int(textChoice) in range(1, len(texts) + 1)
 except:
   terminateProgram("invalid choice, terminating the program..")
 
-# Check if selected text exists
-if int(textChoice) not in range(1, textCount + 1):
+if not (int(textChoice) in range(1, len(texts) + 1)): # Check if the text exists
   terminateProgram("invalid choice, terminating the program..")
 
-# Clean the original text
-# Replace technical symbols \n with spaces
-# Remove commas and full stops
-tmpText = TEXTS[int(textChoice)-1]
-tmpText = tmpText.replace("\n", " ")
-tmpText = tmpText.replace(",", "")
-tmpText = tmpText.replace(".", "")
-
-# Split word forms and add to list
-wordForms = tmpText.split(" ")
-
-# Remove empty values from the list
-while "" in wordForms:
+# Clean the original text and convert it into a list
+tmpText = texts[int(textChoice) - 1]
+tmpText = tmpText.replace("\n", " ") # Replace \n with spaces
+tmpText = tmpText.replace(",", "") # Remove commas
+tmpText = tmpText.replace(".", "") # Remove full stops
+wordForms = tmpText.split(" ") # Split word forms and add them to a list
+while "" in wordForms: # Remove empty values from the list
   wordForms.remove("")
 
-# Create counters
-wordsTitlecase = 0
-wordsUppercase = 0
-wordsLowercase = 0
-wordsStrange = 0
+# Analyse word forms and calculate statistics
+wordsTitle = 0
+wordsUpper = 0
+wordsLower = 0
 numbersCount = 0
 numbersSum = 0
-wordFormLengths = []
-wordFormLengthsFreqs = []
+wordFormLongest = len(max(wordForms, key=len)) # The longest word form
+wordFormFrequency = [0] * (wordFormLongest + 1) # List for statistics (from 1)
 
-# Iterate through word forms
 for wordForm in wordForms:
-
-  # select words
-  if wordForm.isalpha():
-
-    # title case
-    if wordForm.istitle() or (wordForm in titlecaseExceptions): # US is titlecase
-      wordsTitlecase += 1
-
-    # upper case
-    if wordForm.isupper():
-      wordsUppercase += 1
-
-    # lower case
-    if wordForm.islower():
-      wordsLowercase += 1
-
-  # select numbers
-  elif wordForm.isdigit():
-
-    # count
-    numbersCount += 1
-
-    # sum up
-    numbersSum += int(wordForm)
-
-  # Add word length to calculate frequencies
-  wordFormLengths.append(int(len(wordForm)))
-
-# Calculate word length frequencies
-for length in range(1, int(max(wordFormLengths))+1):
-  wordFormLengthsFreqs.append(wordFormLengths.count(length))
-
-# Max frequency to format output
-maxFreq = max(wordFormLengthsFreqs)
+  if wordForm.isalpha(): # Words
+    if wordForm[0].istitle(): # Title case
+      wordsTitle += 1
+    if wordForm.isupper(): # Upper case
+      wordsUpper += 1
+    if wordForm.islower(): # Lower case
+      wordsLower += 1
+  elif wordForm.isdigit(): # Numbers
+    numbersCount += 1 # Count
+    numbersSum += int(wordForm) # Sum up
+  wordFormFrequency[len(wordForm)] += 1 # Count the word lengths frequencies
 
 # Print the results
 print("----------------------------------------")
-print(f"""There are {len(wordForms)} words in the selected text.
-There are {wordsTitlecase} titlecase words.
-There are {wordsUppercase} uppercase words.
-There are {wordsLowercase} lowercase words.
-There are {numbersCount} numeric strings.
-The sum of all the numbers {numbersSum}""")
+print(f"There are {len(wordForms)} words in the selected text.")
+print(f"There are {wordsTitle} titlecase words.")
+print(f"There are {wordsUpper} uppercase words.")
+print(f"There are {wordsLower} lowercase words.")
+print(f"There are {numbersCount} numeric strings.")
+print(f"The sum of all the numbers {numbersSum}")
+
+maxWordFrequency = max(wordFormFrequency) # Max frequency to format the output
 print("----------------------------------------")
-print(f"LEN|{'OCCURENCES':^{maxFreq}}  |NR.")
+print(f"LEN|{'OCCURENCES':^{maxWordFrequency + 2}}|NR.")
 print("----------------------------------------")
-for length, freq in enumerate(wordFormLengthsFreqs):
-  freqStars = "*" * freq
-  print(f"{length + 1:>3}|{freqStars:<{maxFreq}}  |{freq}")
+for wordLength, wordFrequency in enumerate(wordFormFrequency[1:], start = 1):
+  graphStars = "*" * wordFrequency
+  print(f"{wordLength:>3}|{graphStars:<{maxWordFrequency + 2}}|{wordFrequency}")
