@@ -83,9 +83,8 @@ tmpText = texts[int(textChoice) - 1]
 tmpText = tmpText.replace("\n", " ") # Replace \n with spaces
 tmpText = tmpText.replace(",", "") # Remove commas
 tmpText = tmpText.replace(".", "") # Remove full stops
+tmpText = tmpText.strip() # Remove the leading and ending spaces
 wordForms = tmpText.split(" ") # Split word forms and add them to a list
-while "" in wordForms: # Remove empty values from the list
-  wordForms.remove("")
 
 # Analyse word forms and calculate statistics
 wordsTitle = 0
